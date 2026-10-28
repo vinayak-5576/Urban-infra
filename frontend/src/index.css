@@ -357,9 +357,9 @@ h1, h2, h3, h4, h5, h6 {
   background-color: #0b0f19 !important;
 }
 
-/* Dark mode map tiles styling */
+/* High-tech dark mode map styling for OpenStreetMap - completely free, no API key */
 .leaflet-tile-pane {
-  filter: brightness(0.7) invert(1) contrast(3.5) hue-rotate(205deg) saturate(0.35) brightness(0.65);
+  filter: invert(1) hue-rotate(180deg) contrast(1.2) brightness(0.85);
 }
 
 .leaflet-popup-content-wrapper {
