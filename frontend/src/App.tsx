@@ -67,6 +67,7 @@ export const App: React.FC = () => {
         currentUser={currentUser}
         onLoginClick={() => setIsAuthModalOpen(true)}
         onLogout={handleLogout}
+        onRoleSwitch={handleLoginSuccess}
       />
 
       <main style={{ flex: 1, paddingBottom: '40px' }}>
