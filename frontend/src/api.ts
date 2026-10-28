@@ -185,5 +185,17 @@ export const api = {
     const res = await fetch(`${API_BASE}/analytics/summary`);
     if (!res.ok) throw new Error('Failed to load analytics');
     return res.json();
+  },
+
+  async getRelativePerformance(): Promise<any[]> {
+    const res = await fetch(`${API_BASE}/analytics/relative-performance`);
+    if (!res.ok) throw new Error('Failed to load relative performance');
+    return res.json();
+  },
+
+  async getDemoPersonas(): Promise<any[]> {
+    const res = await fetch(`${API_BASE}/analytics/demo-personas`);
+    if (!res.ok) throw new Error('Failed to load personas');
+    return res.json();
   }
 };

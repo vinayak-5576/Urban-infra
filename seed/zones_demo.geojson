@@ -70,6 +70,75 @@
           ]
         ]
       }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "zone-whitefield",
+        "name": "Whitefield Pilot Zone",
+        "corporation": "Bengaluru East (GBA)",
+        "ward_number": 84,
+        "is_demo": true,
+        "description": "IT and tech corridor covering ITPL main road, Hope Farm, and Varthur junction"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [77.7200, 12.9600],
+            [77.7600, 12.9600],
+            [77.7600, 13.0000],
+            [77.7200, 13.0000],
+            [77.7200, 12.9600]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "zone-jayanagar",
+        "name": "Jayanagar Pilot Zone",
+        "corporation": "Bengaluru South (GBA)",
+        "ward_number": 153,
+        "is_demo": true,
+        "description": "Planned cultural & residential layout covering 3rd to 9th Blocks and Ashoka Pillar"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [77.5700, 12.9150],
+            [77.6000, 12.9150],
+            [77.6000, 12.9450],
+            [77.5700, 12.9450],
+            [77.5700, 12.9150]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "zone-malleshwaram",
+        "name": "Malleshwaram Pilot Zone",
+        "corporation": "Bengaluru West (GBA)",
+        "ward_number": 65,
+        "is_demo": true,
+        "description": "Heritage market & heritage transit belt covering Margosa Rd & Sampige Rd cross streets"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [77.5550, 12.9900],
+            [77.5800, 12.9900],
+            [77.5800, 13.0250],
+            [77.5550, 13.0250],
+            [77.5550, 12.9900]
+          ]
+        ]
+      }
     }
   ]
 }

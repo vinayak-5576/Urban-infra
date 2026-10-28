@@ -1,15 +1,24 @@
 import React from 'react';
-import { AnalyticsSummary } from '../types';
+import { AnalyticsSummary, ZonePerformance, User } from '../types';
 import {
   BarChart3, TrendingUp, CheckCircle, AlertTriangle, Layers, MapPin,
-  ShieldAlert, Activity, Sparkles, RefreshCw, Cpu
+  ShieldAlert, Activity, Sparkles, RefreshCw, Cpu, Trophy, Building2,
+  ArrowRight, UserCheck
 } from 'lucide-react';
 
 interface AnalyticsDashboardProps {
   analytics: AnalyticsSummary | null;
+  performances?: ZonePerformance[];
+  currentUser?: User | null;
+  onSelectZoneHead?: (email: string, zoneId: string) => void;
 }
 
-export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ analytics }) => {
+export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
+  analytics,
+  performances = [],
+  currentUser,
+  onSelectZoneHead
+}) => {
   if (!analytics) {
     return (
       <div style={{ maxWidth: '960px', margin: '0 auto', padding: '60px 20px', textAlign: 'center', color: '#94a3b8' }}>
@@ -102,6 +111,112 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ analytic
           </div>
         </div>
       </div>
+
+      {/* Relative Zone Performance Benchmark Table */}
+      {performances.length > 0 && (
+        <div className="glass-panel" style={{ padding: '28px', marginBottom: '28px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Trophy size={20} color="#facc15" />
+                <h3 style={{ fontSize: '1.25rem', color: '#f8fafc' }}>
+                  Relative Pilot Zone Performance Benchmark
+                </h3>
+              </div>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginTop: '3px' }}>
+                Ranked comparatively across all 6 Bengaluru pilot zones. Click any Zone Head to inspect their operations.
+              </p>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {performances.map((perf) => {
+              const isUserZone = currentUser?.zone_id === perf.zone_id;
+
+              return (
+                <div
+                  key={perf.zone_id}
+                  className="glass-card-interactive"
+                  style={{
+                    background: isUserZone ? 'rgba(0, 240, 255, 0.08)' : 'rgba(255, 255, 255, 0.02)',
+                    borderRadius: '12px',
+                    padding: '16px 20px',
+                    border: isUserZone ? '1px solid rgba(0, 240, 255, 0.4)' : '1px solid var(--border-subtle)',
+                    display: 'grid',
+                    gridTemplateColumns: '50px 1.5fr 1fr 1fr 100px auto',
+                    alignItems: 'center',
+                    gap: '16px'
+                  }}
+                  onClick={() => {
+                    if (onSelectZoneHead && perf.zone_head_email) {
+                      onSelectZoneHead(perf.zone_head_email, perf.zone_id);
+                    }
+                  }}
+                >
+                  {/* Rank */}
+                  <div style={{
+                    fontWeight: 800,
+                    fontSize: '1.1rem',
+                    color: perf.rank === 1 ? '#facc15' : perf.rank === 2 ? '#38bdf8' : '#94a3b8',
+                    fontFamily: 'Outfit, sans-serif'
+                  }}>
+                    #{perf.rank}
+                  </div>
+
+                  {/* Zone Name & Head */}
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ fontSize: '1rem', fontWeight: 700, color: '#f8fafc' }}>{perf.zone_name}</span>
+                      {isUserZone && (
+                        <span style={{ fontSize: '0.68rem', padding: '1px 6px', borderRadius: '4px', background: '#00f0ff25', color: '#00f0ff', fontWeight: 700 }}>
+                          YOUR ZONE
+                        </span>
+                      )}
+                    </div>
+                    <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>
+                      Head: <b style={{ color: '#cbd5e1' }}>{perf.zone_head_name}</b> &bull; {perf.corporation}
+                    </div>
+                  </div>
+
+                  {/* Resolution Rate */}
+                  <div>
+                    <div style={{ fontSize: '0.85rem', color: '#10b981', fontWeight: 700 }}>
+                      {perf.resolution_rate_pct}% Resolved
+                    </div>
+                    <div style={{ fontSize: '0.74rem', color: '#94a3b8' }}>
+                      {perf.resolved_verified} of {perf.total_issues} verified closed
+                    </div>
+                  </div>
+
+                  {/* Reopen Dispute Rate */}
+                  <div>
+                    <div style={{ fontSize: '0.85rem', color: perf.reopen_rate_pct > 0 ? '#fb7185' : '#34d399', fontWeight: 700 }}>
+                      {perf.reopen_rate_pct}% Disputes
+                    </div>
+                    <div style={{ fontSize: '0.74rem', color: '#94a3b8' }}>
+                      {perf.reopened_count} citizen disputes
+                    </div>
+                  </div>
+
+                  {/* Score */}
+                  <div>
+                    <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#00f0ff', fontFamily: 'Outfit, sans-serif' }}>
+                      {perf.performance_score}
+                    </div>
+                    <div style={{ fontSize: '0.7rem', color: '#64748b' }}>Index / 100</div>
+                  </div>
+
+                  {/* Action Link */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.78rem', color: '#38bdf8', fontWeight: 600 }}>
+                    <span>Inspect</span>
+                    <ArrowRight size={14} />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Grid: Category & Zone Distributions */}
       <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '28px', marginBottom: '28px' }}>

@@ -11,18 +11,26 @@ interface OfficerQueueProps {
   zones: Zone[];
   categories: Category[];
   onRefresh: () => void;
+  selectedZoneId?: string;
 }
 
 export const OfficerQueue: React.FC<OfficerQueueProps> = ({
   issues,
   zones,
   categories,
-  onRefresh
+  onRefresh,
+  selectedZoneId
 }) => {
-  const [selectedZone, setSelectedZone] = useState<string>('');
+  const [selectedZone, setSelectedZone] = useState<string>(selectedZoneId || '');
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [activeTabFilter, setActiveTabFilter] = useState<'all' | 'high_priority' | 'action_needed' | 'in_progress'>('all');
   const [activeBreakdownIssue, setActiveBreakdownIssue] = useState<Issue | null>(null);
+
+  React.useEffect(() => {
+    if (selectedZoneId) {
+      setSelectedZone(selectedZoneId);
+    }
+  }, [selectedZoneId]);
 
   // Transition state
   const [updatingId, setUpdatingId] = useState<string | null>(null);

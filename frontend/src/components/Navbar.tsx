@@ -10,6 +10,7 @@ interface NavbarProps {
   onLoginClick: () => void;
   onLogout: () => void;
   onRoleSwitch: (user: User) => void;
+  onOpenPersonaDrawer: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -18,7 +19,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   currentUser,
   onLoginClick,
   onLogout,
-  onRoleSwitch
+  onRoleSwitch,
+  onOpenPersonaDrawer
 }) => {
   const handleQuickSwitch = async (email: string, pass: string) => {
     try {
@@ -35,11 +37,11 @@ export const Navbar: React.FC<NavbarProps> = ({
       {/* Top Academic & Demo Banner */}
       <div className="demo-banner">
         <Radio size={14} color="#fde047" className="spin" style={{ animationDuration: '4s' }} />
-        <span>PHASE-2 EVALUATION PREVIEW &bull; BENGALURU PILOT STUDY AREA: KORAMANGALA, INDIRANAGAR, HSR</span>
+        <span>PHASE-2 EVALUATION PREVIEW &bull; 6 BENGALURU PILOT ZONES &bull; 22 PERSONAS &bull; RELATIVE ZONE LEADERBOARD</span>
       </div>
 
       <nav style={{
-        background: 'rgba(7, 10, 18, 0.82)',
+        background: 'rgba(7, 10, 18, 0.88)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
         borderBottom: '1px solid var(--border-subtle)',
@@ -78,7 +80,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 borderRadius: '6px',
                 border: '1px solid rgba(56, 189, 248, 0.3)'
               }}>
-                BENGALURU
+                BENGALURU 6-ZONE PILOT
               </span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.72rem', color: 'var(--text-muted)' }}>
@@ -130,66 +132,57 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
         </div>
 
-        {/* 1-Click Role Switcher for Evaluator Convenience */}
+        {/* Action Controls & Persona Hub */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            background: 'rgba(255, 255, 255, 0.04)',
-            borderRadius: '10px',
-            padding: '3px 6px',
-            border: '1px solid var(--border-subtle)',
-            gap: '4px'
-          }}>
-            <span style={{ fontSize: '0.68rem', color: '#64748b', fontWeight: 600, paddingLeft: '4px' }}>Role:</span>
-            <button
-              className="btn btn-sm"
-              style={{
-                padding: '3px 8px',
-                fontSize: '0.72rem',
-                background: currentUser?.role === 'citizen' ? 'rgba(56, 189, 248, 0.2)' : 'transparent',
-                color: currentUser?.role === 'citizen' ? '#38bdf8' : '#94a3b8',
-                border: currentUser?.role === 'citizen' ? '1px solid rgba(56, 189, 248, 0.4)' : 'none'
-              }}
-              onClick={() => handleQuickSwitch('citizen@demo.org', 'citizen123')}
-              title="Switch to Citizen Ramesh"
-            >
-              Citizen
-            </button>
-            <button
-              className="btn btn-sm"
-              style={{
-                padding: '3px 8px',
-                fontSize: '0.72rem',
-                background: currentUser?.role === 'officer' ? 'rgba(168, 85, 247, 0.2)' : 'transparent',
-                color: currentUser?.role === 'officer' ? '#c084fc' : '#94a3b8',
-                border: currentUser?.role === 'officer' ? '1px solid rgba(168, 85, 247, 0.4)' : 'none'
-              }}
-              onClick={() => handleQuickSwitch('officer@gba.civic.in', 'officer123')}
-              title="Switch to Road Officer Suresh"
-            >
-              Officer
-            </button>
-            <button
-              className="btn btn-sm"
-              style={{
-                padding: '3px 8px',
-                fontSize: '0.72rem',
-                background: currentUser?.role === 'zone_head' ? 'rgba(16, 185, 129, 0.2)' : 'transparent',
-                color: currentUser?.role === 'zone_head' ? '#34d399' : '#94a3b8',
-                border: currentUser?.role === 'zone_head' ? '1px solid rgba(16, 185, 129, 0.4)' : 'none'
-              }}
-              onClick={() => handleQuickSwitch('head@gba.civic.in', 'head123')}
-              title="Switch to Zone Head Dr. Ananya"
-            >
-              Zone Head
-            </button>
-          </div>
+          {/* Persona & Zone Hub Trigger */}
+          <button
+            className="btn btn-sm"
+            onClick={onOpenPersonaDrawer}
+            style={{
+              background: 'linear-gradient(135deg, rgba(0, 240, 255, 0.18), rgba(99, 102, 241, 0.22))',
+              border: '1px solid rgba(0, 240, 255, 0.5)',
+              color: '#00f0ff',
+              fontWeight: 700,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              boxShadow: '0 0 14px rgba(0, 240, 255, 0.25)',
+              padding: '6px 14px'
+            }}
+            title="Open Persona Switcher & Relative Zone Performance"
+          >
+            <UserCheck size={15} />
+            <span>Persona &amp; Zone Hub</span>
+          </button>
 
+          {/* Current User Display or Quick Switch */}
           {currentUser ? (
-            <button className="btn btn-secondary btn-sm" onClick={onLogout} title="Sign Out">
-              <LogOut size={14} />
-            </button>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              background: 'rgba(255, 255, 255, 0.05)',
+              padding: '4px 10px',
+              borderRadius: '8px',
+              border: '1px solid var(--border-subtle)'
+            }}>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#f8fafc', whiteSpace: 'nowrap' }}>
+                  {currentUser.full_name}
+                </div>
+                <div style={{ fontSize: '0.66rem', color: '#94a3b8', textTransform: 'capitalize' }}>
+                  {currentUser.role.replace('_', ' ')}
+                </div>
+              </div>
+              <button
+                className="btn btn-secondary btn-sm"
+                onClick={onLogout}
+                style={{ padding: '4px 8px' }}
+                title="Sign Out"
+              >
+                <LogOut size={13} />
+              </button>
+            </div>
           ) : (
             <button className="btn btn-primary btn-sm" onClick={onLoginClick}>
               <LogIn size={15} /> Sign In

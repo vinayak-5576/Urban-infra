@@ -107,3 +107,34 @@ export interface AnalyticsSummary {
   category_breakdown: Array<{ name: string; icon: string; count: number }>;
   zone_breakdown: Array<{ zone: string; count: number }>;
 }
+
+export interface ZonePerformance {
+  zone_id: string;
+  zone_name: string;
+  corporation: string;
+  ward_number?: number;
+  zone_head_name: string;
+  zone_head_email?: string;
+  total_reports: number;
+  total_issues: number;
+  dedupe_ratio: number;
+  open_backlog: number;
+  resolved_verified: number;
+  reopened_count: number;
+  resolution_rate_pct: number;
+  reopen_rate_pct: number;
+  avg_priority: number;
+  performance_score: number;
+  rank: number;
+}
+
+export interface DemoPersona {
+  id: string;
+  email: string;
+  full_name: string;
+  role: 'citizen' | 'officer' | 'zone_head' | 'admin';
+  zone_id?: string;
+  zone_name: string;
+  corporation: string;
+  department_id?: string;
+}
