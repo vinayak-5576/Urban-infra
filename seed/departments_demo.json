@@ -1,0 +1,37 @@
+[
+  {
+    "id": "dept-roads",
+    "code": "RD-INFRA",
+    "name": "Road Infrastructure & Maintenance",
+    "description": "Responsible for arterial roads, pothole repairs, resurfacing, and asphalt sealing.",
+    "is_demo": true
+  },
+  {
+    "id": "dept-swm",
+    "code": "SWM-CIVIC",
+    "name": "Solid Waste Management",
+    "description": "Handles garbage blackspots, municipal clearance, and secondary collection points.",
+    "is_demo": true
+  },
+  {
+    "id": "dept-drainage",
+    "code": "SWD-BWSSB",
+    "name": "Stormwater Drains & Water Supply",
+    "description": "Oversees flood mitigation, stormwater drain (Rajakaluve) desilting, and water logging.",
+    "is_demo": true
+  },
+  {
+    "id": "dept-electrical",
+    "code": "BESCOM-LT",
+    "name": "Streetlighting & Electrical Utilities",
+    "description": "Maintains LED streetlights, public poles, and hazardous loose utility cables.",
+    "is_demo": true
+  },
+  {
+    "id": "dept-traffic",
+    "code": "BTP-CIVIC",
+    "name": "Traffic Infrastructure & Footpaths",
+    "description": "Pedestrian footpaths, zebra crossings, signalization, and road-divider maintenance.",
+    "is_demo": true
+  }
+]

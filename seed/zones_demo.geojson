@@ -1,0 +1,75 @@
+{
+  "type": "FeatureCollection",
+  "name": "bengaluru_pilot_zones",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "zone-koramangala",
+        "name": "Koramangala Pilot Zone",
+        "corporation": "Bengaluru South (GBA)",
+        "ward_number": 151,
+        "is_demo": true,
+        "description": "Commercial & residential hub covering Koramangala 1st to 8th Blocks"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [77.6100, 12.9250],
+            [77.6400, 12.9250],
+            [77.6400, 12.9450],
+            [77.6100, 12.9450],
+            [77.6100, 12.9250]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "zone-indiranagar",
+        "name": "Indiranagar Pilot Zone",
+        "corporation": "Bengaluru East (GBA)",
+        "ward_number": 74,
+        "is_demo": true,
+        "description": "High-density retail & transit corridor covering 100ft Rd & CMH Rd"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [77.6300, 12.9650],
+            [77.6550, 12.9650],
+            [77.6550, 12.9850],
+            [77.6300, 12.9850],
+            [77.6300, 12.9650]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "zone-hsr",
+        "name": "HSR Layout Pilot Zone",
+        "corporation": "Bengaluru South (GBA)",
+        "ward_number": 174,
+        "is_demo": true,
+        "description": "Residential grid sector covering HSR Sectors 1-7 and Agara lake perimeter"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [77.6300, 12.9000],
+            [77.6650, 12.9000],
+            [77.6650, 12.9250],
+            [77.6300, 12.9250],
+            [77.6300, 12.9000]
+          ]
+        ]
+      }
+    }
+  ]
+}

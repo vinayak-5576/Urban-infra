@@ -1,0 +1,74 @@
+[
+  {
+    "id": "cat-pothole",
+    "code": "POTHOLE",
+    "name": "Pothole & Road Damage",
+    "icon": "alert-circle",
+    "severity_weight": 0.85,
+    "default_radius_m": 40.0,
+    "default_dedupe_window_days": 30,
+    "default_department_id": "dept-roads",
+    "sla_ack_hours": 12,
+    "sla_resolve_hours": 72
+  },
+  {
+    "id": "cat-garbage",
+    "code": "GARBAGE",
+    "name": "Garbage Dumping & Blackspots",
+    "icon": "trash-2",
+    "severity_weight": 0.65,
+    "default_radius_m": 25.0,
+    "default_dedupe_window_days": 14,
+    "default_department_id": "dept-swm",
+    "sla_ack_hours": 6,
+    "sla_resolve_hours": 24
+  },
+  {
+    "id": "cat-drainage",
+    "code": "DRAINAGE",
+    "name": "Waterlogging & Drain Overflow",
+    "icon": "droplets",
+    "severity_weight": 0.90,
+    "default_radius_m": 50.0,
+    "default_dedupe_window_days": 21,
+    "default_department_id": "dept-drainage",
+    "sla_ack_hours": 6,
+    "sla_resolve_hours": 48
+  },
+  {
+    "id": "cat-streetlight",
+    "code": "STREETLIGHT",
+    "name": "Streetlight Failure & Dark Spots",
+    "icon": "sun",
+    "severity_weight": 0.50,
+    "default_radius_m": 20.0,
+    "default_dedupe_window_days": 14,
+    "default_department_id": "dept-electrical",
+    "sla_ack_hours": 12,
+    "sla_resolve_hours": 36
+  },
+  {
+    "id": "cat-footpath",
+    "code": "FOOTPATH",
+    "name": "Broken Footpath & Encroachment",
+    "icon": "footprints",
+    "severity_weight": 0.55,
+    "default_radius_m": 30.0,
+    "default_dedupe_window_days": 45,
+    "default_department_id": "dept-traffic",
+    "sla_ack_hours": 24,
+    "sla_resolve_hours": 120
+  },
+  {
+    "id": "cat-excavation",
+    "code": "EXCAVATION",
+    "name": "Open Utility Trench & Excavation",
+    "icon": "cone",
+    "severity_weight": 0.80,
+    "default_radius_m": 45.0,
+    "default_dedupe_window_days": 30,
+    "default_department_id": "dept-roads",
+    "sla_ack_hours": 8,
+    "sla_resolve_hours": 48
+  }
+]
