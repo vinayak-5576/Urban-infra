@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Issue, Zone, Category } from '../types';
+import { Issue, Zone, Category, User } from '../types';
 import { api } from '../api';
 import {
   Shield, Info, ArrowUpRight, CheckCircle2, Play, Check, Clock, Filter,
@@ -10,6 +10,7 @@ interface OfficerQueueProps {
   issues: Issue[];
   zones: Zone[];
   categories: Category[];
+  currentUser?: User | null;
   onRefresh: () => void;
   selectedZoneId?: string;
 }
@@ -18,9 +19,11 @@ export const OfficerQueue: React.FC<OfficerQueueProps> = ({
   issues,
   zones,
   categories,
+  currentUser,
   onRefresh,
   selectedZoneId
 }) => {
+  const isStaff = currentUser && ['officer', 'zone_head', 'dept_head', 'admin'].includes(currentUser.role);
   const [selectedZone, setSelectedZone] = useState<string>(selectedZoneId || '');
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [activeTabFilter, setActiveTabFilter] = useState<'all' | 'high_priority' | 'action_needed' | 'in_progress'>('all');
@@ -262,55 +265,65 @@ export const OfficerQueue: React.FC<OfficerQueueProps> = ({
               </div>
 
               {/* Action Buttons */}
-              <div style={{ display: 'flex', gap: '8px' }}>
-                {issue.status === 'new' && (
-                  <button
-                    className="btn btn-sm btn-secondary"
-                    style={{ borderColor: '#38bdf8', color: '#38bdf8' }}
-                    onClick={() => handleStatusTransition(issue.id, 'acknowledged')}
-                    disabled={updatingId === issue.id}
-                  >
-                    <CheckCircle2 size={15} /> Acknowledge
-                  </button>
-                )}
-
-                {issue.status === 'acknowledged' && (
-                  <button
-                    className="btn btn-sm"
-                    style={{ background: '#8b5cf6', color: '#fff' }}
-                    onClick={() => handleStatusTransition(issue.id, 'in_progress')}
-                    disabled={updatingId === issue.id}
-                  >
-                    <Play size={15} /> Dispatch Crew
-                  </button>
-                )}
-
-                {issue.status === 'in_progress' && (
-                  <button
-                    className="btn btn-sm"
-                    style={{ background: '#10b981', color: '#fff' }}
-                    onClick={() => setResolveModalIssue(issue)}
-                    disabled={updatingId === issue.id}
-                  >
-                    <Check size={15} /> Mark Resolved
-                  </button>
-                )}
-
-                {issue.status === 'reopened' && (
-                  <button
-                    className="btn btn-sm"
-                    style={{ background: '#f59e0b', color: '#070a12', fontWeight: 800 }}
-                    onClick={() => handleStatusTransition(issue.id, 'in_progress', 'Re-assigned to asphalt contractor following citizen dispute.')}
-                    disabled={updatingId === issue.id}
-                  >
-                    <Play size={15} /> Restart Repair
-                  </button>
-                )}
-
-                {issue.status === 'resolved_pending_verification' && (
-                  <span style={{ fontSize: '0.75rem', color: '#fde047', fontWeight: 600, padding: '6px 10px', background: 'rgba(234, 179, 8, 0.12)', borderRadius: '8px', border: '1px solid rgba(234, 179, 8, 0.3)' }}>
-                    Awaiting Citizen Sign-off
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                {!isStaff ? (
+                  <span style={{ fontSize: '0.74rem', color: '#64748b', fontStyle: 'italic' }}>
+                    {issue.status === 'resolved_pending_verification'
+                      ? 'Awaiting Citizen Sign-off (See My Reports)'
+                      : 'Municipal Staff Oversight Only'}
                   </span>
+                ) : (
+                  <>
+                    {issue.status === 'new' && (
+                      <button
+                        className="btn btn-sm btn-secondary"
+                        style={{ borderColor: '#38bdf8', color: '#38bdf8' }}
+                        onClick={() => handleStatusTransition(issue.id, 'acknowledged')}
+                        disabled={updatingId === issue.id}
+                      >
+                        <CheckCircle2 size={15} /> Acknowledge
+                      </button>
+                    )}
+
+                    {issue.status === 'acknowledged' && (
+                      <button
+                        className="btn btn-sm"
+                        style={{ background: '#8b5cf6', color: '#fff' }}
+                        onClick={() => handleStatusTransition(issue.id, 'in_progress')}
+                        disabled={updatingId === issue.id}
+                      >
+                        <Play size={15} /> Dispatch Crew
+                      </button>
+                    )}
+
+                    {issue.status === 'in_progress' && (
+                      <button
+                        className="btn btn-sm"
+                        style={{ background: '#10b981', color: '#fff' }}
+                        onClick={() => setResolveModalIssue(issue)}
+                        disabled={updatingId === issue.id}
+                      >
+                        <Check size={15} /> Mark Resolved
+                      </button>
+                    )}
+
+                    {issue.status === 'reopened' && (
+                      <button
+                        className="btn btn-sm"
+                        style={{ background: '#f59e0b', color: '#070a12', fontWeight: 800 }}
+                        onClick={() => handleStatusTransition(issue.id, 'in_progress', 'Re-assigned to asphalt contractor following citizen dispute.')}
+                        disabled={updatingId === issue.id}
+                      >
+                        <Play size={15} /> Restart Repair
+                      </button>
+                    )}
+
+                    {issue.status === 'resolved_pending_verification' && (
+                      <span style={{ fontSize: '0.75rem', color: '#fde047', fontWeight: 600, padding: '6px 10px', background: 'rgba(234, 179, 8, 0.12)', borderRadius: '8px', border: '1px solid rgba(234, 179, 8, 0.3)' }}>
+                        Awaiting Citizen Sign-off
+                      </span>
+                    )}
+                  </>
                 )}
               </div>
             </div>

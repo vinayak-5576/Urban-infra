@@ -22,6 +22,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLoginSu
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    if (isRegister && password.trim().length < 6) {
+      setError('Password must be at least 6 characters long.');
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -36,7 +42,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLoginSu
       }
       onClose();
     } catch (err: any) {
-      setError(err.message || 'Authentication failed');
+      const msg = typeof err === 'string' ? err : err?.message || 'Authentication failed';
+      setError(typeof msg === 'object' ? JSON.stringify(msg) : String(msg));
     } finally {
       setIsLoading(false);
     }
@@ -125,7 +132,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLoginSu
             <input
               type="password"
               className="form-input"
-              placeholder="••••••••"
+              placeholder={isRegister ? "At least 6 characters" : "••••••••"}
+              minLength={6}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required

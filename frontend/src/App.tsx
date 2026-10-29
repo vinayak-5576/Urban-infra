@@ -144,6 +144,7 @@ export const App: React.FC = () => {
             issues={issues}
             zones={zones}
             categories={categories}
+            currentUser={currentUser}
             onRefresh={fetchData}
             selectedZoneId={selectedZoneFilter}
           />

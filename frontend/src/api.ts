@@ -38,6 +38,16 @@ const getHeaders = (isMultipart: boolean = false) => {
   return headers;
 };
 
+const parseErrorMessage = (err: any, fallback: string): string => {
+  if (!err) return fallback;
+  if (typeof err.detail === 'string') return err.detail;
+  if (Array.isArray(err.detail)) {
+    return err.detail.map((item: any) => item.msg || item.message || JSON.stringify(item)).join('. ');
+  }
+  if (typeof err.message === 'string') return err.message;
+  return fallback;
+};
+
 export const api = {
   // Auth
   async register(email: string, password: string, fullName: string) {
@@ -47,8 +57,8 @@ export const api = {
       body: JSON.stringify({ email, password, full_name: fullName })
     });
     if (!res.ok) {
-      const err = await res.json().catch(() => ({ detail: 'Registration failed' }));
-      throw new Error(err.detail || 'Registration failed');
+      const err = await res.json().catch(() => null);
+      throw new Error(parseErrorMessage(err, 'Registration failed. Password must be at least 6 characters.'));
     }
     return res.json();
   },
@@ -60,8 +70,8 @@ export const api = {
       body: JSON.stringify({ email, password })
     });
     if (!res.ok) {
-      const err = await res.json().catch(() => ({ detail: 'Login failed' }));
-      throw new Error(err.detail || 'Login failed');
+      const err = await res.json().catch(() => null);
+      throw new Error(parseErrorMessage(err, 'Invalid email or password.'));
     }
     return res.json();
   },
