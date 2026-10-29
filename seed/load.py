@@ -112,6 +112,7 @@ def run_seed():
         ]
 
         for p in personas:
+            p["is_demo"] = True
             existing = db.query(User).filter(User.email == p["email"]).first()
             if not existing:
                 db.add(User(**p))
@@ -120,6 +121,7 @@ def run_seed():
                 existing.zone_id = p.get("zone_id")
                 existing.department_id = p.get("department_id")
                 existing.role = p["role"]
+                existing.is_demo = True
         db.commit()
 
         # 5. Seed Comprehensive Incidents Across ALL 6 Zones

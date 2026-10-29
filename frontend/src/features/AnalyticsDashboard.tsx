@@ -112,104 +112,130 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         </div>
       </div>
 
-      {/* Relative Zone Performance Benchmark Table */}
+      {/* Fair Per-Zone Operational Metrics (Uncertainty-Aware) */}
       {performances.length > 0 && (
         <div className="glass-panel" style={{ padding: '28px', marginBottom: '28px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Trophy size={20} color="#facc15" />
+                <Activity size={20} color="#00f0ff" />
                 <h3 style={{ fontSize: '1.25rem', color: '#f8fafc' }}>
-                  Relative Pilot Zone Performance Benchmark
+                  Per-Zone Operational Metrics (Uncertainty-Aware)
                 </h3>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginTop: '3px' }}>
-                Ranked comparatively across all 6 Bengaluru pilot zones. Click any Zone Head to inspect their operations.
+                Reporting sample size (n), median response times, SLA compliance with Wilson 95% confidence intervals, and reopen rates.
+                No composite scores or individual rankings are computed, per Stage 12 guidelines.
               </p>
+            </div>
+            <div style={{
+              background: 'rgba(234, 179, 8, 0.1)',
+              border: '1px solid rgba(234, 179, 8, 0.3)',
+              color: '#facc15',
+              padding: '6px 12px',
+              borderRadius: '8px',
+              fontSize: '0.75rem',
+              fontWeight: 700
+            }}>
+              Minimum Sample Rule: n &ge; 20
             </div>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {performances.map((perf) => {
               const isUserZone = currentUser?.zone_id === perf.zone_id;
 
               return (
                 <div
                   key={perf.zone_id}
-                  className="glass-card-interactive"
                   style={{
-                    background: isUserZone ? 'rgba(0, 240, 255, 0.08)' : 'rgba(255, 255, 255, 0.02)',
+                    background: isUserZone ? 'rgba(0, 240, 255, 0.05)' : 'rgba(255, 255, 255, 0.02)',
                     borderRadius: '12px',
                     padding: '16px 20px',
                     border: isUserZone ? '1px solid rgba(0, 240, 255, 0.4)' : '1px solid var(--border-subtle)',
                     display: 'grid',
-                    gridTemplateColumns: '50px 1.5fr 1fr 1fr 100px auto',
+                    gridTemplateColumns: '1.6fr 1fr 1.2fr 1.4fr 1fr',
                     alignItems: 'center',
                     gap: '16px'
                   }}
-                  onClick={() => {
-                    if (onSelectZoneHead && perf.zone_head_email) {
-                      onSelectZoneHead(perf.zone_head_email, perf.zone_id);
-                    }
-                  }}
                 >
-                  {/* Rank */}
-                  <div style={{
-                    fontWeight: 800,
-                    fontSize: '1.1rem',
-                    color: perf.rank === 1 ? '#facc15' : perf.rank === 2 ? '#38bdf8' : '#94a3b8',
-                    fontFamily: 'Outfit, sans-serif'
-                  }}>
-                    #{perf.rank}
-                  </div>
-
-                  {/* Zone Name & Head */}
+                  {/* Zone Name & Scope */}
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span style={{ fontSize: '1rem', fontWeight: 700, color: '#f8fafc' }}>{perf.zone_name}</span>
+                      <span style={{ fontSize: '1.05rem', fontWeight: 700, color: '#f8fafc' }}>{perf.zone_name}</span>
                       {isUserZone && (
                         <span style={{ fontSize: '0.68rem', padding: '1px 6px', borderRadius: '4px', background: '#00f0ff25', color: '#00f0ff', fontWeight: 700 }}>
-                          YOUR ZONE
+                          YOUR JURISDICTION
                         </span>
                       )}
                     </div>
-                    <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>
-                      Head: <b style={{ color: '#cbd5e1' }}>{perf.zone_head_name}</b> &bull; {perf.corporation}
+                    <div style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: '2px' }}>
+                      {perf.corporation} &bull; <span style={{ color: '#cbd5e1' }}>{perf.ward_label || 'Pilot Sector'}</span>
                     </div>
                   </div>
 
-                  {/* Resolution Rate */}
+                  {/* Sample Size (n) & Data Quality Status */}
                   <div>
-                    <div style={{ fontSize: '0.85rem', color: '#10b981', fontWeight: 700 }}>
-                      {perf.resolution_rate_pct}% Resolved
+                    <div style={{ fontSize: '0.92rem', color: '#f8fafc', fontWeight: 700 }}>
+                      n = {perf.n} issues
                     </div>
                     <div style={{ fontSize: '0.74rem', color: '#94a3b8' }}>
-                      {perf.resolved_verified} of {perf.total_issues} verified closed
+                      {perf.total_reports} citizen observations ({perf.dedupe_corroboration_ratio}x dedupe)
+                    </div>
+                    {perf.insufficient_data && (
+                      <span style={{
+                        display: 'inline-block',
+                        marginTop: '4px',
+                        fontSize: '0.68rem',
+                        padding: '1px 6px',
+                        borderRadius: '4px',
+                        background: 'rgba(234, 179, 8, 0.15)',
+                        color: '#facc15',
+                        fontWeight: 700
+                      }}>
+                        insufficient data (n &lt; 20)
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Response Durations */}
+                  <div>
+                    <div style={{ fontSize: '0.76rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      Median Response
+                    </div>
+                    <div style={{ fontSize: '0.86rem', color: '#cbd5e1', fontWeight: 600, marginTop: '2px' }}>
+                      Ack: <span style={{ color: '#38bdf8' }}>{perf.median_ack_hours !== null && perf.median_ack_hours !== undefined ? `${perf.median_ack_hours}h` : 'N/A'}</span> &bull; 
+                      Resolve: <span style={{ color: '#38bdf8' }}>{perf.median_resolve_hours !== null && perf.median_resolve_hours !== undefined ? `${perf.median_resolve_hours}h` : 'N/A'}</span>
+                    </div>
+                    <div style={{ fontSize: '0.72rem', color: '#64748b' }}>
+                      Backlog: {perf.open_backlog} open
                     </div>
                   </div>
 
-                  {/* Reopen Dispute Rate */}
+                  {/* SLA Compliance with Wilson 95% Confidence Interval */}
                   <div>
-                    <div style={{ fontSize: '0.85rem', color: perf.reopen_rate_pct > 0 ? '#fb7185' : '#34d399', fontWeight: 700 }}>
-                      {perf.reopen_rate_pct}% Disputes
+                    <div style={{ fontSize: '0.76rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      SLA Compliance Rate
+                    </div>
+                    <div style={{ fontSize: '0.92rem', color: '#10b981', fontWeight: 700, marginTop: '2px' }}>
+                      {perf.sla_compliance_pct}%
                     </div>
                     <div style={{ fontSize: '0.74rem', color: '#94a3b8' }}>
-                      {perf.reopened_count} citizen disputes
+                      95% CI: [{perf.sla_wilson_interval_95 ? `${perf.sla_wilson_interval_95[0]}% – ${perf.sla_wilson_interval_95[1]}%` : 'N/A'}]
                     </div>
                   </div>
 
-                  {/* Score */}
+                  {/* Reopen / Dispute Rate */}
                   <div>
-                    <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#00f0ff', fontFamily: 'Outfit, sans-serif' }}>
-                      {perf.performance_score}
+                    <div style={{ fontSize: '0.76rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      Citizen Reopen Rate
                     </div>
-                    <div style={{ fontSize: '0.7rem', color: '#64748b' }}>Index / 100</div>
-                  </div>
-
-                  {/* Action Link */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.78rem', color: '#38bdf8', fontWeight: 600 }}>
-                    <span>Inspect</span>
-                    <ArrowRight size={14} />
+                    <div style={{ fontSize: '0.92rem', color: perf.reopen_rate_pct > 0 ? '#fb7185' : '#34d399', fontWeight: 700, marginTop: '2px' }}>
+                      {perf.reopen_rate_pct}%
+                    </div>
+                    <div style={{ fontSize: '0.74rem', color: '#94a3b8' }}>
+                      {perf.reopened_count} disputed
+                    </div>
                   </div>
                 </div>
               );
@@ -217,6 +243,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
           </div>
         </div>
       )}
+
 
       {/* Grid: Category & Zone Distributions */}
       <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '28px', marginBottom: '28px' }}>

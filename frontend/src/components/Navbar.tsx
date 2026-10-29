@@ -35,9 +35,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <header style={{ position: 'sticky', top: 0, zIndex: 1000, width: '100%' }}>
       {/* Top Academic & Demo Banner */}
-      <div className="demo-banner">
+      <div className="demo-banner" style={{ background: '#78350f', color: '#fef08a', fontWeight: 700, letterSpacing: '0.04em' }}>
         <Radio size={14} color="#fde047" className="spin" style={{ animationDuration: '4s' }} />
-        <span>PHASE-2 EVALUATION PREVIEW &bull; 6 BENGALURU PILOT ZONES &bull; 22 PERSONAS &bull; RELATIVE ZONE LEADERBOARD</span>
+        <span>DEMO DATA — SYNTHETIC AND PILOT TEST SCENARIOS ONLY. NOT OFFICIAL GBA CIVIC DATA (APPROXIMATE BOUNDARIES).</span>
       </div>
 
       <nav style={{
@@ -72,20 +72,20 @@ export const Navbar: React.FC<NavbarProps> = ({
                 CivicIntel
               </span>
               <span style={{
-                background: 'rgba(56, 189, 248, 0.15)',
-                color: '#38bdf8',
+                background: 'rgba(234, 179, 8, 0.2)',
+                color: '#facc15',
                 fontSize: '0.68rem',
                 fontWeight: 700,
                 padding: '2px 6px',
                 borderRadius: '6px',
-                border: '1px solid rgba(56, 189, 248, 0.3)'
+                border: '1px solid rgba(234, 179, 8, 0.4)'
               }}>
-                BENGALURU 6-ZONE PILOT
+                DEMO PILOT
               </span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.72rem', color: 'var(--text-muted)' }}>
               <div className="pulse-dot" />
-              <span>Spatial Core Online &bull; GBA 369-Ward Model</span>
+              <span>Spatial Core Online &bull; GBA Approximate Pilot Sectors (Demo Data)</span>
             </div>
           </div>
         </div>

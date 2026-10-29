@@ -23,6 +23,7 @@ class User(Base):
     department_id = Column(String(36), ForeignKey("departments.id"), nullable=True)
     zone_id = Column(String(36), ForeignKey("zones.id"), nullable=True)
     is_active = Column(Boolean, default=True, nullable=False)
+    is_demo = Column(Boolean, default=True, nullable=False)
     created_at = Column(DateTime(timezone=True), default=get_utc_now, nullable=False)
 
     reports = relationship("Report", back_populates="reporter")

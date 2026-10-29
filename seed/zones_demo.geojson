@@ -9,8 +9,9 @@
         "name": "Koramangala Pilot Zone",
         "corporation": "Bengaluru South (GBA)",
         "ward_number": 151,
+        "ward_label": "Approx. Ward 151 (BBMP-era reference)",
         "is_demo": true,
-        "description": "Commercial & residential hub covering Koramangala 1st to 8th Blocks"
+        "description": "Commercial & residential hub covering Koramangala 1st to 8th Blocks (Demo Boundary)"
       },
       "geometry": {
         "type": "Polygon",
@@ -32,8 +33,9 @@
         "name": "Indiranagar Pilot Zone",
         "corporation": "Bengaluru East (GBA)",
         "ward_number": 74,
+        "ward_label": "Approx. Ward 74 (BBMP-era reference)",
         "is_demo": true,
-        "description": "High-density retail & transit corridor covering 100ft Rd & CMH Rd"
+        "description": "High-density retail & transit corridor covering 100ft Rd & CMH Rd (Demo Boundary)"
       },
       "geometry": {
         "type": "Polygon",
@@ -55,8 +57,9 @@
         "name": "HSR Layout Pilot Zone",
         "corporation": "Bengaluru South (GBA)",
         "ward_number": 174,
+        "ward_label": "Approx. Ward 174 (BBMP-era reference)",
         "is_demo": true,
-        "description": "Residential grid sector covering HSR Sectors 1-7 and Agara lake perimeter"
+        "description": "Residential grid sector covering HSR Sectors 1-7 and Agara perimeter (Demo Boundary)"
       },
       "geometry": {
         "type": "Polygon",
@@ -78,8 +81,9 @@
         "name": "Whitefield Pilot Zone",
         "corporation": "Bengaluru East (GBA)",
         "ward_number": 84,
+        "ward_label": "Approx. Ward 84 (BBMP-era reference)",
         "is_demo": true,
-        "description": "IT and tech corridor covering ITPL main road, Hope Farm, and Varthur junction"
+        "description": "IT and tech corridor covering ITPL main road and Hope Farm (Demo Boundary)"
       },
       "geometry": {
         "type": "Polygon",
@@ -101,8 +105,9 @@
         "name": "Jayanagar Pilot Zone",
         "corporation": "Bengaluru South (GBA)",
         "ward_number": 153,
+        "ward_label": "Approx. Ward 153 (BBMP-era reference)",
         "is_demo": true,
-        "description": "Planned cultural & residential layout covering 3rd to 9th Blocks and Ashoka Pillar"
+        "description": "Planned residential layout covering 3rd to 9th Blocks (Demo Boundary)"
       },
       "geometry": {
         "type": "Polygon",
@@ -124,8 +129,9 @@
         "name": "Malleshwaram Pilot Zone",
         "corporation": "Bengaluru West (GBA)",
         "ward_number": 65,
+        "ward_label": "Approx. Ward 65 (BBMP-era reference)",
         "is_demo": true,
-        "description": "Heritage market & heritage transit belt covering Margosa Rd & Sampige Rd cross streets"
+        "description": "Heritage market belt covering Margosa Rd & Sampige Rd (Demo Boundary)"
       },
       "geometry": {
         "type": "Polygon",

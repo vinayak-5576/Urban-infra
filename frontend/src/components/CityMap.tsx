@@ -86,7 +86,7 @@ export const CityMap: React.FC<CityMapProps> = ({
         poly.bindTooltip(`
           <div style="font-family:Inter,sans-serif; padding:4px;">
             <div style="font-weight:700; color:${strokeColor}; font-size:12px;">${zone.name}</div>
-            <div style="font-size:11px; color:#94a3b8;">${zone.corporation} &bull; Ward ${zone.ward_number || 'Pilot'}</div>
+            <div style="font-size:11px; color:#94a3b8;">${zone.corporation} &bull; Approx. Ward ${zone.ward_number || 'Pilot'} (Demo)</div>
           </div>
         `, {
           sticky: true,

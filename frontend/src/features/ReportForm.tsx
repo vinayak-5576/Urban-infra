@@ -451,7 +451,7 @@ export const ReportForm: React.FC<ReportFormProps> = ({ categories, zones, onRep
                       {detectedZone.name}
                     </div>
                     <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>
-                      {detectedZone.corporation} &bull; Ward {detectedZone.ward_number || 'Pilot'} &bull; Ray-Casting Verified
+                      {detectedZone.corporation} &bull; Approx. Ward {detectedZone.ward_number || 'Pilot'} (Demo) &bull; Ray-Casting Verified
                     </div>
                   </div>
                 </>

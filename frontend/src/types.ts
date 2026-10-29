@@ -112,20 +112,24 @@ export interface ZonePerformance {
   zone_id: string;
   zone_name: string;
   corporation: string;
-  ward_number?: number;
-  zone_head_name: string;
-  zone_head_email?: string;
+  ward_label?: string;
+  n: number;
+  insufficient_data: boolean;
+  minimum_sample_threshold?: number;
   total_reports: number;
-  total_issues: number;
-  dedupe_ratio: number;
+  dedupe_corroboration_ratio: number;
   open_backlog: number;
-  resolved_verified: number;
+  median_ack_hours?: number | null;
+  median_resolve_hours?: number | null;
+  sla_compliance_pct: number;
+  sla_wilson_interval_95: [number, number];
   reopened_count: number;
-  resolution_rate_pct: number;
   reopen_rate_pct: number;
-  avg_priority: number;
-  performance_score: number;
-  rank: number;
+  reopen_wilson_interval_95?: [number, number];
+  is_demo: boolean;
+  rank?: number;
+  performance_score?: number;
+  zone_head_name?: string;
 }
 
 export interface DemoPersona {
