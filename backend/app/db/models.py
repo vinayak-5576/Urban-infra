@@ -4,6 +4,7 @@ from sqlalchemy import (
     Column, String, Text, Boolean, Integer, Float, DateTime, ForeignKey, JSON
 )
 from sqlalchemy.orm import relationship
+from geoalchemy2 import Geometry, Geography
 from backend.app.db.session import Base
 
 def generate_uuid() -> str:
@@ -34,8 +35,8 @@ class Zone(Base):
     id = Column(String(64), primary_key=True)
     name = Column(String(255), nullable=False)
     corporation = Column(String(255), nullable=False)
-    ward_number = Column(Integer, nullable=True)
-    geom_geojson = Column(JSON, nullable=False)
+    geom = Column(Geometry(geometry_type="MULTIPOLYGON", srid=4326, spatial_index=True), nullable=False)
+    geom_geojson = Column(JSON, nullable=True)
     is_demo = Column(Boolean, default=True, nullable=False)
     description = Column(Text, nullable=True)
 
@@ -84,6 +85,7 @@ class Issue(Base):
 
     id = Column(String(36), primary_key=True, default=generate_uuid)
     category_id = Column(String(64), ForeignKey("categories.id"), nullable=False)
+    location = Column(Geography(geometry_type="POINT", srid=4326, spatial_index=True), nullable=False)
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)
     zone_id = Column(String(64), ForeignKey("zones.id"), nullable=False)
@@ -127,6 +129,7 @@ class Report(Base):
     category_pred_id = Column(String(64), ForeignKey("categories.id"), nullable=True)
     pred_confidence = Column(Float, nullable=True)
     
+    location = Column(Geography(geometry_type="POINT", srid=4326, spatial_index=True), nullable=False)
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)
     zone_id = Column(String(64), ForeignKey("zones.id"), nullable=False)

@@ -11,7 +11,6 @@ export interface Zone {
   id: string;
   name: string;
   corporation: string;
-  ward_number?: number;
   is_demo: boolean;
   description?: string;
   geom_geojson: {

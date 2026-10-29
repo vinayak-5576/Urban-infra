@@ -83,6 +83,9 @@ async def submit_report(
     )
 
     # 6. Create Report record
+    from shapely.geometry import Point
+    from geoalchemy2.shape import from_shape
+
     new_report = Report(
         reporter_id=current_user.id,
         issue_id=issue.id,
@@ -90,6 +93,7 @@ async def submit_report(
         category_user_id=category.id,
         category_pred_id=pred_cat,
         pred_confidence=pred_conf,
+        location=from_shape(Point(longitude, latitude), srid=4326),
         latitude=latitude,
         longitude=longitude,
         zone_id=matched_zone.id,

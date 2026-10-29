@@ -8,7 +8,8 @@ class Settings(BaseSettings):
     PORT: int = 8000
     HOST: str = "127.0.0.1"
 
-    DATABASE_URL: str = "sqlite:///./urban_infra.db"
+    DATABASE_URL: str = "postgresql+psycopg://urban_infra:urban_infra_dev_password@localhost:5432/urban_infra"
+    TEST_DATABASE_URL: str = "postgresql+psycopg://urban_infra:urban_infra_dev_password@localhost:5432/urban_infra_test"
     JWT_SECRET: str = "dev_secret_key_change_in_production_998877665544332211"
     ACCESS_TOKEN_MINUTES: int = 120
     REFRESH_TOKEN_DAYS: int = 7

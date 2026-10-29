@@ -4,23 +4,21 @@ This document honestly records the technical trade-offs, architecture constraint
 
 ---
 
-## 1. Storage & Database: SQLite vs Production PostGIS
-- **Current State:** The platform runs on **SQLite** (`urban_infra.db`) using SQLAlchemy 2.0 and Alembic for schema migrations.
-- **Why It Was Chosen:** Enables zero-dependency local execution, instant reproducible test suites, and portable demonstrations across evaluator machines without requiring external daemon setup.
-- **Limitations:**
-  - **Write Concurrency:** SQLite uses database-level locking on writes. High-throughput citizen report bursts under production load will encounter write contention.
-  - **Spatial Indexing:** SQLite lacks native PostGIS spatial indices (such as GiST or R-Tree indices over binary geometry types). Spatial lookups currently require querying zone boundaries into application memory.
-- **Migration Path:** The data model strictly uses standard SQLAlchemy types and GeoJSON representations. The system is designed for direct migration to **PostgreSQL 16 + PostGIS**, replacing SQLite without changing application-level service contracts.
+## 1. Storage & Database: PostgreSQL 16 + PostGIS (Resolved)
+- **Current State:** The platform runs on **PostgreSQL 16 with PostGIS 3.4** (`postgis/postgis:16-3.4` container).
+- **Architecture:**
+  - Alembic is the single authoritative schema path (`alembic/versions/`).
+  - Spatial point columns in `issues` and `reports` are indexed with native PostGIS `geography(Point, 4326)` and GiST indexes (`idx_issues_location`, `idx_reports_location`).
+  - Zone boundary polygons are stored as `geometry(MultiPolygon, 4326)` with GiST indexes (`idx_zones_geom`).
+  - Full transactional ACID guarantees and high-concurrency connection pooling via `psycopg` replace SQLite single-file write locking.
+- **Verification:** Continuous integration tests execute against a dedicated, isolated test database (`urban_infra_test`) in Docker Compose, guaranteeing zero contamination of development data.
 
 ---
 
-## 2. Geospatial Computation: Application-Level Ray-Casting
-- **Current State:** Point-in-Polygon (PIP) zone boundary matching and Haversine distance calculations are implemented in **pure Python** (`RayCastingGeoService` implementing `IGeoService` in `backend/app/services/geo.py`).
-- **Why It Was Chosen:** Pre-compiled C++ spatial binaries (such as `GEOS` C-libraries used by native GDAL/Shapely) are blocked on certain student Windows workstations by Windows Defender Application Control policies. The pure Python implementation operates with zero security policy friction.
-- **Limitations:**
-  - **Complexity:** Evaluating ray intersections runs in $O(N \cdot M)$ time per point, where $M$ is the number of polygon boundary vertices. While instantaneous across 6 pilot zones (dozens of vertices), it will degrade if evaluated against all 369 GBA ward boundaries without spatial bounding-box indexing.
-  - **Complex Geometries:** Multipolygons with internal voids (islands or holes) require simplified exterior ring processing.
-- **Mitigation:** The `IGeoService` interface isolates all spatial logic. When deployed on a Linux/Docker environment with PostGIS, a `PostGISGeoService` can be injected without altering API routers or tests.
+## 2. Geospatial Computation: PostGIS with In-Memory Oracle
+- **Current State:** Zone lookup is performed natively via PostGIS `ST_Contains(geom, point)`. Proximity and duplicate candidate screening use geodetic `ST_DWithin(location, point, radius_m)`.
+- **Test Oracle:** The pure-Python `RayCastingGeoService` is retained behind the `IGeoService` interface as an authoritative reference oracle.
+- **Mathematical Validation:** Automated test suite tests 200 random points distributed across the Greater Bengaluru pilot study area, proving 100% agreement between PostGIS spatial predicates and the pure-Python oracle, with geodetic distances agreeing within < 1 metre tolerance.
 
 ---
 

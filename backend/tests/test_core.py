@@ -37,8 +37,10 @@ def test_zone_point_in_polygon():
         db.close()
 
 def test_geo_service_interface():
+    from backend.app.services.geo import PostGISGeoService, oracle_geo_service
     assert isinstance(geo_service, IGeoService)
-    assert isinstance(geo_service, RayCastingGeoService)
+    assert isinstance(geo_service, (PostGISGeoService, RayCastingGeoService))
+    assert isinstance(oracle_geo_service, RayCastingGeoService)
     # Haversine distance
     dist = geo_service.haversine_distance_meters(12.9352, 77.6245, 12.9360, 77.6245)
     assert 50 < dist < 150

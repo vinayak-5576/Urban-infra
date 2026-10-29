@@ -1,8 +1,10 @@
 from datetime import datetime, timedelta, timezone
 from typing import Tuple, Optional
 from sqlalchemy.orm import Session
+from shapely.geometry import Point
+from geoalchemy2.shape import from_shape
 from backend.app.db.models import Issue, Category, Report
-from backend.app.services.geo import haversine_distance_meters
+from backend.app.services.geo import geo_service
 from backend.app.services.priority import compute_priority_score
 from backend.app.services.routing import determine_department_for_issue
 
@@ -15,7 +17,7 @@ def link_or_create_issue(
     is_synthetic: bool = False
 ) -> Tuple[Issue, bool]:
     """
-    Checks for open issues within spatial deduplication radius.
+    Checks for open issues within spatial deduplication radius using GeoService candidate search.
     Returns: (issue, is_newly_created)
     """
     radius_m = category.default_radius_m
@@ -23,19 +25,23 @@ def link_or_create_issue(
     cutoff_time = datetime.now(timezone.utc) - timedelta(days=window_days)
 
     open_statuses = ["new", "acknowledged", "in_progress", "reopened"]
-    candidate_issues = db.query(Issue).filter(
-        Issue.category_id == category.id,
-        Issue.zone_id == zone_id,
-        Issue.status.in_(open_statuses),
-        Issue.first_reported_at >= cutoff_time
-    ).all()
+    candidate_issues = geo_service.find_candidate_issues(
+        db=db,
+        category_id=category.id,
+        zone_id=zone_id,
+        lat=latitude,
+        lon=longitude,
+        radius_m=radius_m,
+        cutoff_time=cutoff_time,
+        open_statuses=open_statuses
+    )
 
     # Find closest issue within threshold
     closest_issue = None
     min_dist = float("inf")
 
     for candidate in candidate_issues:
-        dist = haversine_distance_meters(latitude, longitude, candidate.latitude, candidate.longitude)
+        dist = geo_service.haversine_distance_meters(latitude, longitude, candidate.latitude, candidate.longitude)
         if dist <= radius_m and dist < min_dist:
             min_dist = dist
             closest_issue = candidate
@@ -74,6 +80,7 @@ def link_or_create_issue(
 
     new_issue = Issue(
         category_id=category.id,
+        location=from_shape(Point(longitude, latitude), srid=4326),
         latitude=latitude,
         longitude=longitude,
         zone_id=zone_id,

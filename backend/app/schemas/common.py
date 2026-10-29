@@ -33,10 +33,9 @@ class ZoneOut(BaseModel):
     id: str
     name: str
     corporation: str
-    ward_number: Optional[int] = None
     is_demo: bool
     description: Optional[str] = None
-    geom_geojson: Dict[str, Any]
+    geom_geojson: Optional[Dict[str, Any]] = None
 
 class CategoryOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)

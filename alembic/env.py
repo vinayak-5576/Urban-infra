@@ -21,16 +21,30 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from backend.app.db.session import Base
+from backend.app.core.config import settings
 import backend.app.db.models  # noqa
 
 # add your model's MetaData object here
 # for 'autogenerate' support
 target_metadata = Base.metadata
 
+db_url = os.getenv("DATABASE_URL", settings.DATABASE_URL)
+if db_url:
+    config.set_main_option("sqlalchemy.url", db_url)
+
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
+
+
+our_tables = set(target_metadata.tables.keys())
+
+
+def include_object(object, name, type_, reflected, compare_to):
+    if type_ == "table":
+        return name in our_tables
+    return True
 
 
 def run_migrations_offline() -> None:
@@ -51,6 +65,7 @@ def run_migrations_offline() -> None:
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
+        include_object=include_object,
     )
 
     with context.begin_transaction():
@@ -72,7 +87,9 @@ def run_migrations_online() -> None:
 
     with connectable.connect() as connection:
         context.configure(
-            connection=connection, target_metadata=target_metadata
+            connection=connection,
+            target_metadata=target_metadata,
+            include_object=include_object,
         )
 
         with context.begin_transaction():

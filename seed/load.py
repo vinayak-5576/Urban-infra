@@ -2,6 +2,8 @@ import os
 import json
 import random
 from datetime import datetime, timedelta, timezone
+from geoalchemy2.shape import from_shape
+from shapely.geometry import shape, Point
 from backend.app.core.security import hash_password
 from backend.app.db.session import SessionLocal, engine, Base
 from backend.app.db.models import (
@@ -16,8 +18,7 @@ def load_json(filename: str):
         return json.load(f)
 
 def run_seed():
-    print("Initializing Database Tables...")
-    Base.metadata.create_all(bind=engine)
+    random.seed(42)
     db = SessionLocal()
 
     try:
@@ -50,20 +51,24 @@ def run_seed():
             props = feature["properties"]
             geom = feature["geometry"]
             existing = db.query(Zone).filter(Zone.id == props["id"]).first()
+            geom_wkb = from_shape(shape(geom), srid=4326)
             if not existing:
                 db.add(Zone(
                     id=props["id"],
                     name=props["name"],
                     corporation=props["corporation"],
-                    ward_number=props["ward_number"],
                     geom_geojson=geom,
-                    is_demo=props["is_demo"],
-                    description=props["description"]
+                    geom=geom_wkb,
+                    is_demo=props.get("is_demo", True),
+                    description=props.get("description", "")
                 ))
             else:
                 existing.geom_geojson = geom
+                existing.geom = geom_wkb
                 existing.name = props["name"]
                 existing.corporation = props["corporation"]
+                existing.description = props.get("description", "")
+                existing.is_demo = props.get("is_demo", True)
         db.commit()
 
         # 4. Seed Personas: Citizens, Officers, and Zone Heads for EACH zone
@@ -361,6 +366,7 @@ def run_seed():
                 category_id=sc["category_id"],
                 latitude=sc["lat"],
                 longitude=sc["lon"],
+                location=from_shape(Point(sc["lon"], sc["lat"]), srid=4326),
                 zone_id=sc["zone_id"],
                 department_id=sc["dept_id"],
                 status=sc["status"],
@@ -386,6 +392,8 @@ def run_seed():
             citizen = all_citizens.get(sc["zone_id"]) or all_citizens["zone-koramangala"]
 
             for text in sc["reports"]:
+                rep_lat = sc["lat"] + random.uniform(-0.00015, 0.00015)
+                rep_lon = sc["lon"] + random.uniform(-0.00015, 0.00015)
                 rep = Report(
                     reporter_id=citizen.id,
                     issue_id=issue.id,
@@ -393,8 +401,9 @@ def run_seed():
                     category_user_id=sc["category_id"],
                     category_pred_id=sc["category_id"],
                     pred_confidence=0.91,
-                    latitude=sc["lat"] + random.uniform(-0.00015, 0.00015),
-                    longitude=sc["lon"] + random.uniform(-0.00015, 0.00015),
+                    latitude=rep_lat,
+                    longitude=rep_lon,
+                    location=from_shape(Point(rep_lon, rep_lat), srid=4326),
                     zone_id=sc["zone_id"],
                     status="linked",
                     is_synthetic=True,

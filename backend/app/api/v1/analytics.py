@@ -141,7 +141,7 @@ def get_zone_metrics(db: Session = Depends(get_db)):
             "zone_id": zone.id,
             "zone_name": zone.name,
             "corporation": zone.corporation,
-            "ward_label": f"Approx. Ward {zone.ward_number} (Demo reference)" if zone.ward_number else "Approx. Pilot Sector",
+            "ward_label": "Pilot Sector (Demo)",
             "n": n,
             "insufficient_data": insufficient_data,
             "minimum_sample_threshold": 20,
